@@ -148,3 +148,6 @@ Desktop.ini
 # Configuración personal del Editor (VS Code)
 .vscode/
 *.code-workspace
+
+# Credenciales de cuentas precargadas
+credenciales.md
