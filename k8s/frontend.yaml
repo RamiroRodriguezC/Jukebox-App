@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jukebox-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: web
+        image: ramirorodcas/jukebox-frontend:v1.0
+        ports:
+        - containerPort: 80 # Puerto donde escucha Nginx dentro del contenedor
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: frontend
+  ports:
+    - protocol: TCP
+      port: 80        # Puerto que vas a escribir en el navegador (http://localhost)
+      targetPort: 80
+  type: LoadBalancer  # Clave para que Docker Desktop te de acceso desde Windows

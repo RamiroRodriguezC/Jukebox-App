@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jukebox-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: api
+        image: ramirorodcas/jukebox-backend:v1.0
+        ports:
+        - containerPort: 4000
+        env:
+        - name: DB_URL
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: mongo-url
+        - name: JWT_SECRET      # <--- El código leerá process.env.JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: jwt-secret
+        - name: PORT            # <--- El código leerá process.env.PORT
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: server-port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 5000      # El puerto que usará el Frontend para llamar a la API
+      targetPort: 4000 # El puerto donde realmente escucha tu Node.js
+  type: LoadBalancer  # Clave para que Docker Desktop te de acceso desde Windows

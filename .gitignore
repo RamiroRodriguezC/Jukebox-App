@@ -151,4 +151,6 @@ Desktop.ini
 
 # Credenciales de cuentas precargadas
 credenciales.md
+#
 src
+k8s/jukebox-secrets.yaml
